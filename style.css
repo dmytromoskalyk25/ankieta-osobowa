@@ -1,0 +1,39 @@
+body {
+  font-family: system-ui, sans-serif;
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 20px;
+}
+
+.wrap {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #020617;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+h1 {
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  margin-top: 4px;
+  border-radius: 6px;
+  border: 1px solid #4b5563;
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+button {
+  margin-top: 10px;
+  padding:
