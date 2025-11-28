@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <title>Test Regula MRZ</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <h1>Test Regula MRZ</h1>
+
+    <label>Ім’я / First name
+      <input id="first_name">
+    </label>
+
+    <label>Прізвище / Last name
+      <input id="last_name">
+    </label>
+
+    <label>Дата народження / Date of birth
+      <input id="dob">
+    </label>
+
+    <label>Номер документа / Document number
+      <input id="doc_number">
+    </label>
+
+    <label>Громадянство / Nationality
+      <input id="nationality">
+    </label>
+
+    <label>Дата закінчення / Expiry date
+      <input id="expiry_date">
+    </label>
+
+    <button id="scanBtn">Сканувати паспорт (MRZ)</button>
+
+    <!-- Regula Component -->
+    <document-reader id="docReader" style="display:none;"></document-reader>
+  </div>
+
+  <!-- Підключаємо JS як ES-модуль -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
+
