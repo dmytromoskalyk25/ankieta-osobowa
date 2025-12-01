@@ -1,39 +1,36 @@
-body {
-  font-family: system-ui, sans-serif;
-  background: #0f172a;
-  color: #e5e7eb;
-  padding: 20px;
+// Перемикач мов (PL / UA / RU)
+const langRadios = document.querySelectorAll('input[name="lang"]');
+const i18nElems = document.querySelectorAll('.i18n');
+
+function applyLang(lang) {
+  i18nElems.forEach((el) => {
+    const text = el.dataset[lang];
+    if (text) el.textContent = text;
+  });
 }
 
-.wrap {
-  max-width: 600px;
-  margin: 0 auto;
-  background: #020617;
-  padding: 20px;
-  border-radius: 12px;
-}
+// стартова мова – польська
+applyLang("pl");
 
-h1 {
-  font-size: 22px;
-  margin-bottom: 16px;
-}
+langRadios.forEach((radio) => {
+  radio.addEventListener("change", () => {
+    const current = document.querySelector('input[name="lang"]:checked').value;
+    applyLang(current);
+  });
+});
 
-label {
-  display: block;
-  margin-bottom: 10px;
-}
+// Тестова відправка форми – щоб нічого нікуди не пішло випадково
+const form = document.getElementById("ankietaForm");
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
 
-input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 6px 8px;
-  margin-top: 4px;
-  border-radius: 6px;
-  border: 1px solid #4b5563;
-  background: #0f172a;
-  color: #e5e7eb;
-}
+  // Тут пізніше можна зробити відправку в Google Forms, CRM, e-mail і т.д.
+  alert(
+    "Анкету заповнено.\nЗараз це тестовий режим – дані ніде не зберігаються."
+  );
 
-button {
-  margin-top: 10px;
-  padding:
+  // Якщо хочеш очищати форму після відправки:
+  // form.reset();
+  // applyLang(document.querySelector('input[name="lang"]:checked').value);
+});
+
