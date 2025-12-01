@@ -1,49 +1,426 @@
 <!doctype html>
-<html lang="uk">
+<html lang="pl">
 <head>
   <meta charset="utf-8" />
-  <title>Test Regula MRZ</title>
+  <title>Ankieta osobowa – WIPH</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="wrap">
-    <h1>Test Regula MRZ</h1>
+  <div class="page">
 
-    <label>Ім’я / First name
-      <input id="first_name">
-    </label>
+    <!-- ЛОГОТИП -->
+    <header class="header">
+      <!-- Постав свій шлях до лого, наприклад: img/logo-wiph.png -->
+      <img src="logo.png" alt="WIPH Agencja Pracy" class="logo">
+      <div class="lang-switch">
+        <span>Język / Мова / Язык:</span>
+        <label><input type="radio" name="lang" value="pl" checked> PL</label>
+        <label><input type="radio" name="lang" value="ua"> UA</label>
+        <label><input type="radio" name="lang" value="ru"> RU</label>
+      </div>
+    </header>
 
-    <label>Прізвище / Last name
-      <input id="last_name">
-    </label>
+    <main class="card">
+      <h1 class="i18n"
+          data-pl="Ankieta osobowa"
+          data-ua="Особова анкета"
+          data-ru="Личная анкета">
+        Ankieta osobowa
+      </h1>
 
-    <label>Дата народження / Date of birth
-      <input id="dob">
-    </label>
+      <form id="ankietaForm">
 
-    <label>Номер документа / Document number
-      <input id="doc_number">
-    </label>
+        <!-- DANE OSOBOWE -->
+        <fieldset>
+          <legend class="i18n"
+                  data-pl="Dane osobowe"
+                  data-ua="Особисті дані"
+                  data-ru="Личные данные">
+            Dane osobowe
+          </legend>
 
-    <label>Громадянство / Nationality
-      <input id="nationality">
-    </label>
+          <label>
+            <span class="i18n"
+                  data-pl="Imię i nazwisko"
+                  data-ua="Ім’я та прізвище"
+                  data-ru="Имя и фамилия">
+              Imię i nazwisko
+            </span>
+            <input type="text" name="full_name" required>
+          </label>
 
-    <label>Дата закінчення / Expiry date
-      <input id="expiry_date">
-    </label>
-<!-- Повноекранний контейнер сканера Regula -->
-<fullscreen-container id="scanner">
-  <document-reader start-screen></document-reader>
-</fullscreen-container>
+          <label>
+            <span class="i18n"
+                  data-pl="Nazwisko poprzednie"
+                  data-ua="Попереднє прізвище"
+                  data-ru="Предыдущая фамилия">
+              Nazwisko poprzednie
+            </span>
+            <input type="text" name="previous_surname">
+          </label>
 
+          <label>
+            <span class="i18n"
+                  data-pl="Data urodzenia"
+                  data-ua="Дата народження"
+                  data-ru="Дата рождения">
+              Data urodzenia
+            </span>
+            <input type="date" name="birth_date" required>
+          </label>
 
-    <!-- Regula Component -->
-    <document-reader id="docReader" style="display:none;"></document-reader>
+          <label>
+            <span class="i18n"
+                  data-pl="Miasto i kraj urodzenia"
+                  data-ua="Місто і країна народження"
+                  data-ru="Город и страна рождения">
+              Miasto i kraj urodzenia
+            </span>
+            <input type="text" name="birth_place" required>
+          </label>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Imię ojca"
+                  data-ua="Ім’я батька"
+                  data-ru="Имя отца">
+              Imię ojca
+            </span>
+            <input type="text" name="father_name">
+          </label>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Imię matki"
+                  data-ua="Ім’я матері"
+                  data-ru="Имя матери">
+              Imię matki
+            </span>
+            <input type="text" name="mother_name">
+          </label>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Panieńskie nazwisko matki"
+                  data-ua="Дівоче прізвище матері"
+                  data-ru="Девичья фамилия матери">
+              Panieńskie nazwisko matki
+            </span>
+            <input type="text" name="mother_maiden_name">
+          </label>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Numer paszportu"
+                  data-ua="Номер паспорта"
+                  data-ru="Номер паспорта">
+              Numer paszportu
+            </span>
+            <input type="text" name="passport_number" required>
+          </label>
+
+          <label>
+            <span>PESEL</span>
+            <input type="text" name="pesel">
+          </label>
+        </fieldset>
+
+        <!-- KONTAKT -->
+        <fieldset>
+          <legend class="i18n"
+                  data-pl="Dane kontaktowe"
+                  data-ua="Контактні дані"
+                  data-ru="Контактные данные">
+            Dane kontaktowe
+          </legend>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Numer telefonu w Polsce"
+                  data-ua="Номер телефону в Польщі"
+                  data-ru="Номер телефона в Польше">
+              Numer telefonu w Polsce
+            </span>
+            <input type="tel" name="phone_pl">
+          </label>
+
+          <label>
+            <span>VIBER</span>
+            <input type="tel" name="phone_viber">
+          </label>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Dwa numery telefonu osób do kontaktu"
+                  data-ua="Два номери телефонів близьких для контакту"
+                  data-ru="Два номера телефонов близких для контакта">
+              Dwa numery telefonu osób do kontaktu
+            </span>
+            <textarea name="emergency_phones" rows="2"></textarea>
+          </label>
+
+          <label>
+            <span>E-mail</span>
+            <input type="email" name="email">
+          </label>
+        </fieldset>
+
+        <!-- ADRESY -->
+        <fieldset>
+          <legend class="i18n"
+                  data-pl="Adres zameldowania (Ukraina / Białoruś / Mołdawia)"
+                  data-ua="Адреса прописки (Україна / Білорусь / Молдова)"
+                  data-ru="Адрес регистрации (Украина / Беларусь / Молдова)">
+            Adres zameldowania
+          </legend>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Kraj"
+                  data-ua="Країна"
+                  data-ru="Страна">
+              Kraj
+            </span>
+            <input type="text" name="home_country">
+          </label>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Województwo / obwód"
+                  data-ua="Область"
+                  data-ru="Область / регион">
+              Województwo / obwód
+            </span>
+            <input type="text" name="home_region">
+          </label>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Miasto / wieś"
+                  data-ua="Місто / село"
+                  data-ru="Город / село">
+              Miasto / wieś
+            </span>
+            <input type="text" name="home_city">
+          </label>
+
+          <div class="grid-2">
+            <label>
+              <span class="i18n"
+                    data-pl="Ulica"
+                    data-ua="Вулиця"
+                    data-ru="Улица">
+                Ulica
+              </span>
+              <input type="text" name="home_street">
+            </label>
+            <label>
+              <span class="i18n"
+                    data-pl="Nr domu / mieszkania"
+                    data-ua="№ будинку / квартири"
+                    data-ru="№ дома / квартиры">
+                Nr domu / mieszkania
+              </span>
+              <input type="text" name="home_house_flat">
+            </label>
+          </div>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Kod pocztowy"
+                  data-ua="Поштовий індекс"
+                  data-ru="Почтовый индекс">
+              Kod pocztowy
+            </span>
+            <input type="text" name="home_zip">
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend class="i18n"
+                  data-pl="Adres zamieszkania w Polsce"
+                  data-ua="Адреса проживання в Польщі"
+                  data-ru="Адрес проживания в Польше">
+            Adres w Polsce
+          </legend>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Miasto"
+                  data-ua="Місто"
+                  data-ru="Город">
+              Miasto
+            </span>
+            <input type="text" name="pl_city">
+          </label>
+
+          <div class="grid-2">
+            <label>
+              <span class="i18n"
+                    data-pl="Ulica"
+                    data-ua="Вулиця"
+                    data-ru="Улица">
+                Ulica
+              </span>
+              <input type="text" name="pl_street">
+            </label>
+            <label>
+              <span class="i18n"
+                    data-pl="Nr domu / mieszkania"
+                    data-ua="№ будинку / квартири"
+                    data-ru="№ дома / квартиры">
+                Nr domu / mieszkania
+              </span>
+              <input type="text" name="pl_house_flat">
+            </label>
+          </div>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Kod pocztowy"
+                  data-ua="Поштовий індекс"
+                  data-ru="Почтовый индекс">
+              Kod pocztowy
+            </span>
+            <input type="text" name="pl_zip">
+          </label>
+        </fieldset>
+
+        <!-- ZGODY I OŚWIADCZENIA – wersja skrócona do ankiety online -->
+        <fieldset>
+          <legend class="i18n"
+                  data-pl="Zgody i oświadczenia"
+                  data-ua="Згоди та заяви"
+                  data-ru="Согласия и заявления">
+            Zgody i oświadczenia
+          </legend>
+
+          <label class="checkbox">
+            <input type="checkbox" name="pit_email">
+            <span class="i18n"
+                  data-pl="Wyrażam zgodę na przekazywanie mi PIT-ów i innych deklaracji podatkowych drogą elektroniczną na podany wyżej adres e-mail."
+                  data-ua="Погоджуюсь отримувати PIT та інші податкові декларації електронною поштою на вказану вище адресу e-mail."
+                  data-ru="Согласен получать PIT и другие налоговые декларации в электронном виде на указанный выше e-mail.">
+              Wyrażam zgodę na przekazywanie mi PIT-ów i innych deklaracji podatkowych drogą elektroniczną na podany wyżej adres e-mail.
+            </span>
+          </label>
+
+          <label class="checkbox">
+            <input type="checkbox" name="no_other_employment">
+            <span class="i18n"
+                  data-pl="Oświadczam, że nie jestem zatrudniony(a) na podstawie umowy o pracę u innego pracodawcy."
+                  data-ua="Заявляю, що не працюю за трудовим договором в іншого роботодавця."
+                  data-ru="Заявляю, что не работаю по трудовому договору у другого работодателя.">
+              Oświadczam, że nie jestem zatrudniony(a) na podstawie umowy o pracę u innego pracodawcy.
+            </span>
+          </label>
+
+          <label class="checkbox">
+            <input type="checkbox" name="rodo" required>
+            <span class="i18n"
+                  data-pl="Wyrażam zgodę na przetwarzanie moich danych osobowych przez WIPH Agencja Pracy oraz oświadczam, że podałem(am) je dobrowolnie i są zgodne z prawdą."
+                  data-ua="Погоджуюсь на обробку моїх персональних даних WIPH Agencja Pracy і підтверджую, що надав(ла) їх добровільно та вони відповідають дійсності."
+                  data-ru="Соглашаюсь на обработку моих персональных данных WIPH Agencja Pracy и подтверждаю, что предоставил(а) их добровольно и они соответствуют действительности.">
+              Wyrażam zgodę na przetwarzanie moich danych osobowych przez WIPH Agencja Pracy oraz oświadczam, że podałem(am) je dobrowolnie i są zgodne z prawdą.
+            </span>
+          </label>
+        </fieldset>
+
+        <!-- KONTO BANKOWE -->
+        <fieldset>
+          <legend class="i18n"
+                  data-pl="Konto bankowe do wypłaty wynagrodzenia"
+                  data-ua="Банківський рахунок для виплати заробітної плати"
+                  data-ru="Банковский счет для выплаты заработной платы">
+            Konto bankowe
+          </legend>
+
+          <p class="i18n small"
+             data-pl="Wyrażam zgodę na przekazywanie mojego wynagrodzenia za pracę i innych świadczeń pieniężnych na osobiste konto bankowe:"
+             data-ua="Погоджуюсь на перерахування моєї заробітної плати та інших грошових виплат на мій особистий банківський рахунок:"
+             data-ru="Соглашаюсь на перечисление моей заработной платы и других денежных выплат на мой личный банковский счет:">
+            Wyrażam zgodę na przekazywanie mojego wynagrodzenia za pracę i innych świadczeń pieniężnych na osobiste konto bankowe:
+          </p>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Nazwa banku"
+                  data-ua="Назва банку"
+                  data-ru="Название банка">
+              Nazwa banku
+            </span>
+            <input type="text" name="bank_name">
+          </label>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Numer konta bankowego (IBAN)"
+                  data-ua="Номер банківського рахунку (IBAN)"
+                  data-ru="Номер банковского счета (IBAN)">
+              Numer konta bankowego (IBAN)
+            </span>
+            <input type="text" name="bank_account">
+          </label>
+        </fieldset>
+
+        <!-- PODPIS -->
+        <fieldset>
+          <legend class="i18n"
+                  data-pl="Podpis"
+                  data-ua="Підпис"
+                  data-ru="Подпись">
+            Podpis
+          </legend>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Miejscowość i data"
+                  data-ua="Місто та дата"
+                  data-ru="Место и дата">
+              Miejscowość i data
+            </span>
+            <input type="text" name="place_date">
+          </label>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Data (RRRR-MM-DD)"
+                  data-ua="Дата (РРРР-ММ-ДД)"
+                  data-ru="Дата (ГГГГ-ММ-ДД)">
+              Data
+            </span>
+            <input type="date" name="signature_date">
+          </label>
+
+          <label>
+            <span class="i18n"
+                  data-pl="Imię i nazwisko (do podpisu)"
+                  data-ua="Ім’я та прізвище (для підпису)"
+                  data-ru="Имя и фамилия (для подписи)">
+              Imię i nazwisko (do podpisu)
+            </span>
+            <input type="text" name="signature_name">
+          </label>
+        </fieldset>
+
+        <button type="submit" class="primary-btn i18n"
+                data-pl="Wyślij ankietę (testowo)"
+                data-ua="Надіслати анкету (тест)"
+                data-ru="Отправить анкету (тест)">
+          Wyślij ankietę (testowo)
+        </button>
+
+        <p class="small i18n"
+           data-pl="* Wersja online – po wypełnieniu dane mogą zostać przepisane do systemu kadrowego."
+           data-ua="* Онлайн-версія – після заповнення дані можуть бути перенесені до кадрової системи."
+           data-ru="* Онлайн-версия – после заполнения данные могут быть перенесены в кадровую систему.">
+          * Wersja online – po wypełnieniu dane mogą zostać przepisane do systemu kadrowego.
+        </p>
+      </form>
+    </main>
   </div>
 
-  <!-- Підключаємо JS як ES-модуль -->
-  <script type="module" src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
 
