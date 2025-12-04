@@ -1,108 +1,170 @@
-// ========= НАЛАШТУВАННЯ =========
-// Сюди встав СВІЙ webhook з Make.com
+// ===== НАЛАШТУВАННЯ =====
 const WEBHOOK_URL = "https://hook.eu1.make.com/vf8v0v7cuat7wddevp4hf4yf6xop4jrt";
-// ================================
 
-// Поточна мова (PL за замовчуванням)
-let currentLang = "pl";
+// Ключ для збереження мови в localStorage
+const LANG_KEY = "ankieta_lang";
 
-// ====== МОВИ (перемикач PL / UA / RU) ======
+// ===== ДОПОМОЖНІ ФУНКЦІЇ =====
+
+// Визначаємо поточну мову (за radio)
+function getCurrentLang() {
+  const langRadio = document.querySelector('input[name="lang"]:checked');
+  return langRadio ? langRadio.value : "pl";
+}
+
+// Оновлення текстів за data-pl / data-ua / data-ru
 function updateLanguage(lang) {
-  currentLang = lang;
-  document.documentElement.lang = lang;
+  const elements = document.querySelectorAll("[data-pl], [data-ua], [data-ru]");
 
-  document.querySelectorAll(".i18n").forEach((el) => {
-    const text = el.dataset[lang];
-    if (text) {
+  elements.forEach((el) => {
+    const attr = `data-${lang}`;
+    const text = el.getAttribute(attr);
+    if (!text) return;
+
+    if (
+      el.tagName === "INPUT" ||
+      el.tagName === "TEXTAREA" ||
+      el.tagName === "SELECT"
+    ) {
+      // якщо є placeholder – оновлюємо його
+      if (el.hasAttribute("placeholder")) {
+        el.placeholder = text;
+      } else {
+        el.value = text;
+      }
+    } else {
       el.textContent = text;
     }
   });
 }
 
-// слухаємо перемикачі мов (радіо-кнопки з name="lang")
-document.addEventListener("DOMContentLoaded", () => {
-  const langRadios = document.querySelectorAll('input[name="lang"]');
-  if (langRadios.length) {
-    langRadios.forEach((radio) => {
-      radio.addEventListener("change", () => {
-        if (radio.checked) {
-          updateLanguage(radio.value);
-        }
-      });
-    });
+// Показати alert з повідомленням на поточній мові
+function showAlert(type, lang) {
+  const messages = {
+    success: {
+      pl: "Ankieta została wysłana. Dane trafiły do Make.com (a stamtąd do Google Sheets / e-mail / Trafitt).",
+      ua: "Анкету відправлено. Дані надійшли в Make.com (далі ми їх повеземо в Google Sheets / e-mail / Trafitt).",
+      ru: "Анкета отправлена. Данные отправлены в Make.com (далее в Google Sheets / e-mail / Trafitt).",
+    },
+    error: {
+      pl: "Wystąpił błąd podczas wysyłania ankiety. Spróbuj ponownie lub skontaktuj się z rekruterem.",
+      ua: "Сталася помилка при відправці анкети. Спробуйте ще раз або скажіть рекрутеру.",
+      ru: "Произошла ошибка при отправке анкеты. Попробуйте ещё раз или сообщите рекрутеру.",
+    },
+  };
 
-    // виставити стартову мову
-    const checked = document.querySelector('input[name="lang"]:checked');
-    updateLanguage(checked ? checked.value : "pl");
-  } else {
-    updateLanguage("pl");
+  const msg = messages[type][lang] || messages[type].pl;
+  alert(msg);
+}
+
+// Збираємо ВСІ дані форми в об’єкт
+function collectFormData(form) {
+  const payload = {};
+
+  const fields = form.querySelectorAll("input, select, textarea");
+  fields.forEach((field) => {
+    if (!field.id && !field.name) return; // пропускаємо без id та name
+    if (["button", "submit", "reset"].includes(field.type)) return;
+
+    const key = field.name || field.id;
+    let value;
+
+    if (field.type === "checkbox") {
+      value = field.checked;
+    } else if (field.type === "radio") {
+      if (!field.checked) return; // тільки обране значення
+      value = field.value;
+    } else {
+      value = field.value != null ? field.value.trim() : "";
+    }
+
+    // якщо такий ключ вже є (наприклад, кілька чекбоксів з однаковим name) – робимо масив
+    if (key in payload) {
+      if (Array.isArray(payload[key])) {
+        payload[key].push(value);
+      } else {
+        payload[key] = [payload[key], value];
+      }
+    } else {
+      payload[key] = value;
+    }
+  });
+
+  // Додаткові службові поля
+  payload.lang = getCurrentLang();
+  payload.submitted_at = new Date().toISOString();
+
+  return payload;
+}
+
+// Відправка даних у Make
+async function sendToMake(payload) {
+  const response = await fetch(WEBHOOK_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error ${response.status}`);
   }
-});
 
-// ====== ВІДПРАВКА ФОРМИ В MAKE ======
+  return response.json().catch(() => null); // якщо відповіді немає – не ламаємось
+}
+
+// ===== ІНІЦІАЛІЗАЦІЯ =====
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("ankieta-form");
-  if (!form) return;
-
+  const form = document.querySelector("form"); // головна форма
+  const langRadios = document.querySelectorAll('input[name="lang"]');
   const submitBtn = form.querySelector('button[type="submit"]');
 
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
+  // Відновлюємо мову з localStorage
+  const savedLang = localStorage.getItem(LANG_KEY);
+  if (savedLang) {
+    const radio = document.querySelector(
+      `input[name="lang"][value="${savedLang}"]`
+    );
+    if (radio) {
+      radio.checked = true;
+      updateLanguage(savedLang);
+    }
+  } else {
+    updateLanguage(getCurrentLang());
+  }
 
+  // Слухаємо переключення мови
+  langRadios.forEach((radio) => {
+    radio.addEventListener("change", () => {
+      const lang = getCurrentLang();
+      localStorage.setItem(LANG_KEY, lang);
+      updateLanguage(lang);
+    });
+  });
+
+  // Обробка відправки форми
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const lang = getCurrentLang();
+
+    // Блокуємо кнопку, щоб не клікнули кілька разів
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.classList.add("is-loading");
+      submitBtn.classList.add("is-loading"); // якщо у тебе є такий стиль – буде красиво
     }
 
     try {
-      // Забираємо ВСІ поля з форми (усі input/textarea/select, де є name="")
-      const formData = new FormData(form);
+      const payload = collectFormData(form);
+      await sendToMake(payload);
+      showAlert("success", lang);
 
-      // додаємо службові поля
-      formData.append("lang", currentLang);
-      formData.append("submitted_at", new Date().toISOString());
-
-      // перетворюємо FormData -> звичайний обʼєкт
-      const payload = Object.fromEntries(formData.entries());
-
-      // Відправка в Make
-      const response = await fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`);
-      }
-
-      // Повідомлення після успішної відправки
-      let msg =
-        "Анкету відправлено. Дані надійшли в Make.com (далі ми їх поведемо в Google Sheets / e-mail / Trafitt).";
-      if (currentLang === "pl") {
-        msg =
-          "Ankieta została wysłana. Dane trafiły do Make.com (dalej wyślemy je do Google Sheets / e-mail / Trafitt).";
-      } else if (currentLang === "ru") {
-        msg =
-          "Анкета отправлена. Данные попали в Make.com (дальше мы отправим их в Google Sheets / e-mail / Trafitt).";
-      }
-
-      alert(msg);
-      form.reset(); // очищаємо форму після відправки
+      // за потреби можна очистити форму:
+      // form.reset();
+      // updateLanguage(lang); // щоб після reset зберегти поточну мову в полях
     } catch (err) {
-      console.error(err);
-      let msg =
-        "Сталася помилка при відправці анкети. Спробуйте ще раз або скажіть рекрутеру.";
-      if (currentLang === "pl") {
-        msg =
-          "Wystąpił błąd podczas wysyłania ankiety. Spróbuj ponownie lub poinformuj rekrutera.";
-      } else if (currentLang === "ru") {
-        msg =
-          "Произошла ошибка при отправке анкеты. Попробуйте ещё раз или скажите рекрутеру.";
-      }
-      alert(msg);
+      console.error("Form submit error:", err);
+      showAlert("error", lang);
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
@@ -111,6 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 
 
 
